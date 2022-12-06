@@ -1,0 +1,264 @@
+//izbacivanje duplikata
+#include <stdio.h>
+#include <stdlib.h>
+#define _CRT_SECURE_NO_WARNINGS
+
+
+int cmpf(const void* a, const void* b)
+{
+	return (*(int*)a - *(int*)b);
+}
+
+int* izbaci(int* niz, int *n)
+{
+	qsort(niz, *n, sizeof(int), cmpf);
+	int brojac = 0;
+	for (int i = 0; i < *n-1 ; i += 1)
+	{
+		if (niz[i] != niz[i + 1])
+		{
+			brojac += 1;
+		}
+			
+	}
+	brojac += 1; // dodamo jer ima uvijek jedan broj vise koji brojac ne pokriva
+	int* niz2 = (int*)malloc(brojac * sizeof(int));
+	
+	int j = 0;
+	for (int i = 0; i < *n - 1; i += 1)
+	{
+		if (niz[i] != niz[i + 1])
+		{
+			niz2[j] = niz[i];
+			j += 1;
+		}
+	}
+	niz2[brojac - 1] = niz[*n - 1]; //isti slucaj
+	*n = brojac;
+	return niz2;
+}
+
+int main(void)
+{
+	int niz[] = { 1, 1, 2, 2, 3, 3, 3, 4, 4, 4 };
+	int n = sizeof(niz) / sizeof(niz[0]);
+	int *bez_duplikata = izbaci(niz, &n);
+	
+	for (int i = 0; i < n; i+=1) 
+	{
+		printf("%d ", bez_duplikata[i]);
+	}
+	free(bez_duplikata);
+	return 0;
+}
+
+////////////////////////
+//okretanje niza
+#include <stdio.h>
+#include <stdlib.h>
+
+int* okretanje(int* niz, int n)
+{
+    int* temp = (int*)malloc(n * sizeof(int));
+    for (int i = 0; i < n; i += 1)
+    {
+        temp[n - 1 - i] = niz[i];
+    }
+    for (int i = 0; i < n; i++) 
+    {
+        niz[i] = temp[i];
+    }
+    free(temp);
+    return niz;
+}
+
+int main() {
+    int niz[] = { 1,8,2,6,7,9,2 };
+    int n = sizeof(niz)/sizeof(niz[0]);
+    int* okreni = okretanje(niz, n);
+    for (int i = 0; i < n; i+=1) 
+    {
+        printf("%d ", okreni[i]);
+    }
+    return 0;
+}
+////////////////////////
+//ubacivanje u sredinu
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() 
+{
+    int niz[] = { 1,2,3,4,5,6,7,8 };
+    int n = 8;
+    int* newarr = (int*)malloc((n + 1) * sizeof(int));
+    int j = 0;
+    int novibroj = 15;
+    for (int i = 0; i < n; i++) {
+        if (i == n / 2) {
+            newarr[j] = novibroj;
+            j++;
+            newarr[j] = niz[i];
+            j++;
+        }
+        else {
+            newarr[j] = niz[i];
+            j++;
+        }
+    }
+    for (int i = 0; i <= n; i++) {
+        printf("%d\n", newarr[i]);
+    }
+    return 0;
+}
+////////////////////////
+//ukupan broj tocaka kojima je x manji od y
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct 
+{
+    int x, y;
+
+}Tocka;
+
+
+int main() 
+{
+    int nizX[] = { 1, 3, 5, 2, 6, 7, 5 };
+    int nizY[] = { 3, 2, 5, 3, 4, 1, 8 };
+    int brojac = 0;
+    for (int i = 0; i < sizeof(nizX) / sizeof(int); i++) 
+    {
+        if (nizX[i] < nizY[i]) 
+        {
+            brojac+=1;
+        }
+    }
+    int j = 0;
+    Tocka* nizTocaka = (Tocka*)malloc(sizeof(Tocka) * brojac);
+    for (int i = 0; i < sizeof(nizX) / sizeof(int); i++) {
+        if (nizX[i] < nizY[i]) 
+        {
+           
+            nizTocaka[j].x = nizX[i];
+            nizTocaka[j].y = nizY[i];
+            j+=1;
+
+        }
+    }
+    for (int i = 0; i < brojac; i+=1) 
+    {
+        printf("%d ", nizTocaka[i].x);
+        printf("%d\n", nizTocaka[i].y);
+    }
+    return 0;
+}
+
+////////////////////////
+//dodavanje nove tocke na kraj
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct 
+{
+    int x, y;
+}Tocka;
+
+
+int main() {
+
+    int nizX[] = { 1,3,5,6,7 };
+    int nizY[] = { 3,2,5,4,1 };
+    int n = sizeof(nizX) / sizeof(nizX[0]);
+    Tocka* nizTocaka = (Tocka*)malloc(sizeof(Tocka) * n);
+    for (int i = 0; i < sizeof(nizX) / sizeof(int); i+=1) 
+    {
+        
+        nizTocaka[i].x = nizX[i];
+        nizTocaka[i].y = nizY[i];
+    }
+    Tocka* nizTocaka2 = (Tocka*)malloc(sizeof(Tocka) * (n+1));
+    int j = 0;
+    int x1 = 10;
+    int y1 = 11;
+    for (int i = 0; i < n; i++) {
+        nizTocaka2[j].x = nizTocaka[i].x;
+        nizTocaka2[j].y = nizTocaka[i].y;
+        j++;
+    }
+    nizTocaka2[j].x = x1;
+    nizTocaka2[j].y = y1;
+  
+    for (int i = 0; i < (n+1); i+=1) {
+        printf("%d, ", nizTocaka2[i].x);
+        printf("%d\n", nizTocaka2[i].y);
+    }
+
+    free(nizTocaka);
+    free(nizTocaka2);
+    return 0;
+}
+
+////////////////////////
+//izbacivanje ntog broja
+#include <stdio.h>
+#include <stdlib.h>
+
+
+void izbaci_nti_broj(int* niz, int n, int i) {
+	for (int j = i; j < n-1 ; j++) {
+		niz[j] = niz[j + 1];
+	}
+	
+	
+	for (int i = 0; i < n-1; i += 1)
+	{
+		printf("%d ", niz[i]);
+	}
+}
+
+int main()
+{
+	int niz[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	int n = sizeof(niz) / sizeof(niz[0]);
+	izbaci_nti_broj(niz, n, 5);
+
+}
+////////////////////////
+//parni u novi niz
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int* samo_parni_u_novi_niz(int* niz, int n, int* np) 
+{
+	int b = 0;
+	for (int i = 0; i < n; i++)
+		if (niz[i] % 2 == 0)
+			b++;
+	*np = b;
+	int* novi = (int*)malloc(sizeof(int) * b);
+	int j = 0;
+	for (int i = 0; i < n; i+=1)
+		if (niz[i] % 2 == 0) 
+		{
+			novi[j] = niz[i];
+			j+=1;
+		}
+	return novi;
+}
+
+int main()
+{
+	int niz[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	int n = sizeof(niz) / sizeof(niz[0]);
+	int np;
+	int *novi_niz=samo_parni_u_novi_niz(niz, n, &np);
+
+	for (int i = 0; i < np; i += 1)
+	{
+		printf("%d ", novi_niz[i]);
+	}
+}
