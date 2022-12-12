@@ -22,7 +22,7 @@ void AddNode(BSTree* bst, char* word)
 		(*bst)->right = NULL;
 		return;
 	}
-	else if (strcmp((*bst)->word, word) > 0) //ako je rijec manja od trenutne,rekurzivno livo ili desno
+	else if (strcmp((*bst)->word, word) > 0) // usporedivanje
 	{
 		return AddNode(&(*bst)->left, word);
 	}
