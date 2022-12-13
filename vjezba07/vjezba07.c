@@ -66,14 +66,6 @@ void main()
 
 	DeleteBSTree(bst);
 	printf("\nprovjera:\n");
-	/*if (bst == NULL)
-	{
-		printf("kraj");
-	}
-	else 
-	{ 
-		printf("\ngreska\n");
-	}*/
 	// Uèitaj stablo
 	if ((fd = fopen("stablo.txt", "rt")) == NULL)
 	{

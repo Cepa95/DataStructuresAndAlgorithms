@@ -24,13 +24,13 @@ void AddNode(BSTree* bst, char* word)
 	}
 	else if (strcmp((*bst)->word, word) > 0) // usporedivanje
 	{
-		return AddNode(&(*bst)->left, word);
+		 AddNode(&(*bst)->left, word);
 	}
 	else if (strcmp((*bst)->word, word) < 0)
 	{
-		return AddNode(&(*bst)->right, word);
+		 AddNode(&(*bst)->right, word);
 	}
-	return;
+	free(word);
 
 
 }
@@ -69,16 +69,11 @@ void PrintBSTree(BSTree bst)
 	{
 		return;
 	}
-	if (bst->left != NULL)
-	{
-		PrintBSTree(bst->left); //  lijevo dijete
-	}
-	printf("%s ", bst->word); 
 	
-	if (bst->right != NULL)
-	{
-		PrintBSTree(bst->right); // desno dijete
-	}
+	PrintBSTree(bst->left); //  lijevo dijete
+	printf("%s ", bst->word); 
+	PrintBSTree(bst->right); // desno dijete
+	
 
 }
 
@@ -109,9 +104,6 @@ void SaveBSTree(BSTree bst, FILE* fd)
 }*/
 
 
-
-
-
 void DeleteBSTree(BSTree bst)
 {
 	// Briše stablo (string word i sam èvor) iz memorije.
@@ -127,28 +119,6 @@ void DeleteBSTree(BSTree bst)
 	free(bst->word);
 	free(bst);
 }
-
-int readWord(FILE* fd, char* buffer)
-{
-	int c;
-
-	do {
-		c = fgetc(fd);
-		if (c == EOF)
-			return 0;
-	} while (!isalpha(c));
-
-	do {
-		*buffer = tolower(c);
-		buffer++;
-		c = fgetc(fd);
-		if (c == 146)
-			c = '\'';
-	} while (isalpha(c) || c == '\'');
-
-	*buffer = '\0';
-}
-
 
 BSTree LoadBSTree(FILE* fd)
 {
