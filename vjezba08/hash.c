@@ -38,63 +38,31 @@ unsigned int hash(char* word)
 
 void Insert(HashTable* ht, char* word)
 {
-	// dodaje novu rijec u listu na odgovarajucem pretincu
 	unsigned int key = hash(word) % ht->size;
-	ht->load = ht->load += 1;
-	if (ht->table[key] == NULL)
+	ht->load = ht->load + 1;
+	Bin* tmp = (Bin*)malloc(sizeof(Bin));
+	if (tmp == NULL)
 	{
-		Bin* object = (Bin*)malloc(sizeof(Bin));
-		if (object == NULL)
-		{
-			return;
-		}
-		object->word = word;
-		object->next = ht->table[key];
-		ht->table[key] = object;
 		return;
 	}
-	else
-	{
-		Bin* object = ht->table[key];
-		while (object->next != NULL)
-		{
-			object = object->next;
-		}
-		Bin* tmp = (Bin*)malloc(sizeof(Bin));
-		if (tmp == NULL)
-		{
-			return;
-		}
-		tmp->word = word;
-		tmp->next = object;
-		object = tmp;
-	}
-	//free(word);
+	tmp->word = word;
+	tmp->next = ht->table[key];
+	ht->table[key] = tmp;
 }
+
 
 int Get(HashTable* ht, char* word)
 {
 	// vraca 0 ili 1 ovisno o tome da li rijec postoji u tablici
 	unsigned int key = hash(word) % ht->size;
 	Bin* item = ht->table[key];
-	if (item != NULL)
+	while (item != NULL) 
 	{
-
 		if (strcmp(item->word, word) == 0)
 		{
 			return 1;
 		}
-		else 
-		{
-			while (item->next != NULL) 
-			{
-				if (strcmp(item->word, word) == 0)
-				{
-					return 1;
-				}
-				item = item->next;
-			}
-		}
+		item = item->next;	
 	}
 	return 0;
 }
