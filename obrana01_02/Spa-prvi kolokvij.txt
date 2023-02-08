@@ -1,0 +1,804 @@
+#include <stdio.h>
+#include<string.h>
+#include<stdlib.h>
+
+
+typedef struct _Element {
+	int broj;
+	struct _Element* next;
+} Element;
+
+
+Element* dodaj_u_glavu(int broj, Element* lst) {
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj = broj;
+	novi->next = lst;
+	return novi;
+}
+
+
+Element* dodaj_prije_6(int broj, Element* lst) {
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj = broj;
+	novi->next = NULL;
+
+	if (lst->broj == 6) {
+		novi->next = lst;
+		return novi;
+	}
+
+	Element* tmp = lst;
+	while (tmp->next->broj != 6) {
+		tmp = tmp->next;
+	}
+	novi->next = tmp->next;
+	tmp->next = novi;
+	return lst;
+}
+
+
+void print(Element* lst) {
+	Element* tmp = lst;
+	while (tmp != NULL) {
+		printf("%d-> ", tmp->broj);
+		tmp = tmp->next;
+	}
+	printf(" null\n");
+}
+
+Element* usredinu(Element* lst, int b) {
+
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj = b;
+
+	if (lst == NULL) {
+		novi->next = NULL;
+		return novi;
+	}
+
+	Element* t = lst;
+	Element* d = lst;
+	while (d != NULL && d->next != NULL) {
+		t = t->next;
+		d = d->next->next;
+	}
+
+	novi->next = t->next;
+	t->next = novi;
+
+	return lst;
+
+}
+
+
+//Napisati funkciju koja prima vezanu listu(svaki element sadrži broj) 
+//i dva indeksa.Funkcija će obrisati sve elemente liste između ta dva indeksa.
+//Indeksi su legalni i prvi je manji od drugog. (35 bodova)
+
+Element* prima(Element* lst, int index1, int index2)
+{
+	Element* tmp = lst;
+
+	if (!lst)
+	{
+		return lst;
+	}
+	if (index1 == 0)
+	{
+		while (index2 != 0)
+		{
+			Element* obrisi1 = lst;
+			lst = lst -> next;
+			free(obrisi1);
+			index2--;
+		}
+		return lst;
+
+	}
+	int brojac = 1;
+	while (tmp->next != NULL)
+	{
+		if (brojac > index1 && brojac < index2)
+		{
+			Element* obrisi = tmp->next;
+			tmp->next = tmp->next->next;
+			free(obrisi);
+			brojac++;
+		}
+		else
+		{
+			tmp = tmp->next;
+			brojac++;
+		}
+	}
+	return lst;
+}
+
+//Napisati funkciju koja prima vezanu listu(svaki element sadrži broj) i jedan indeks.
+//Funkcija će dodati novi element na tom indeksu sa brojem 0. 
+//Ako indeks nije legalan(vanka je dužine liste), funkcija ne čini ništa . (35 bodova)
+
+Element* vezano(Element* lst, int index)
+{
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj= 0;
+	novi->next = NULL;
+	if (index == 0)
+	{
+		novi->next = lst;
+		return novi;
+	}
+	int brojac = 1;
+	Element* tmp = lst;
+	while (tmp->next != 0)
+	{
+		if (brojac == index)
+		{
+			novi->next = tmp->next;
+			tmp->next = novi;
+			return lst;
+		}
+		tmp = tmp->next;
+		brojac++;
+	}
+	return lst;
+}
+
+//
+//Napisati funkciju koja prima vezanu listu(svaki element sadrži broj) i jedan dodatni broj.
+//Funkcija će dodati novi element na predzadnje mjesto ako lista nije prazna,
+//ili na prvo mjesto ako je lista prazna. (35 bodova)
+
+Element* potrazi(Element* lst, int broj)
+{
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj =broj;
+	novi->next = NULL;
+	if (!lst)
+	{
+		return novi;
+	}
+	Element* tmp = lst;
+	while (tmp->next->next != NULL)
+	{
+		tmp = tmp->next;
+	}
+	novi->next = tmp->next;
+	tmp->next = novi;
+	return lst;
+
+}
+// *L1 -> 1 -> 2 -> 3 -> 4 -> z -> NULL
+// *L2 -> z -> 2 -> 3 -> 4 -> NULL
+//prebacivanje broja z s pocetka l2 liste na kraj l1 liste //tocno sad
+Element* kraj(Element* l1, Element* l2) {
+
+	Element* tmp1 = l1;
+	while (tmp1->next != NULL)
+		tmp1 = tmp1->next;
+
+	Element* tmp = l2;
+	l2 = l2->next;
+	tmp->next = NULL;
+	tmp1->next = tmp;
+	/*tmp->next = NULL;*/
+	return l1;
+}
+
+
+
+Element* dodajN(Element* lst, int b) { //stavi b broj ispred najveceg broja u listi
+
+
+	Element* maxp = lst;
+	Element* tmp = lst;
+	while (tmp->next != NULL) {
+		if (tmp->next->broj > maxp->next->broj) {
+			maxp = tmp;
+		}
+		tmp = tmp->next;
+	}
+
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj = b;
+
+	if (lst->broj > maxp->next->broj) {
+		novi->next = lst;
+		return novi;
+	}
+	novi->next = maxp->next;
+	maxp->next = novi;
+	return lst;
+}
+
+
+Element* dodajmeusredinu(Element* lst, int broj)
+{
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj = broj;
+	novi->next = NULL;
+	if (!lst)
+	{
+		return novi;
+	}
+	Element* tmp = lst;
+	int brojac = 0;
+
+	while (tmp!= NULL)
+	{
+		tmp = tmp->next;
+		brojac++;
+	}
+	brojac /= 2;
+	printf("%d\n", brojac);
+	Element* tmp1 = lst;
+	while (brojac !=0) // moze i dok broja !=0 ovisno samo ako je neparan niz oce ga staviti blize livoj ili desnoj strani
+	{
+		tmp1 = tmp1->next;
+		brojac--;
+	}
+	novi->next = tmp1->next;
+	tmp1->next = novi;
+	return lst;
+
+}
+
+
+
+Element* dodaj_me_na_kraj(int broj, Element* lst) {
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj = broj;
+	novi->next = NULL;
+	if (lst == NULL) {
+		return novi;
+	}
+	Element* tmp = lst;
+	while (tmp->next != NULL) {
+		tmp = tmp->next;
+	}
+	tmp->next = novi;
+	return lst;
+}
+//
+//Napisati funkciju koja prima jednostruko vezanu listu(svaki element sadrži broj).
+//Funkcija će ispred svakog elementa sa parnim brojem dodati novi element sa brojem 0. 
+//Kolika je složenost funkcije O() ? (35 bodova)
+
+Element* dodaj_ispred_parnog(Element* lst)
+{
+	if (!lst)
+	{
+		return lst;
+	}
+	Element* tmp = lst;
+
+	while (tmp->next != NULL)
+	{
+		if(tmp->next->broj % 2 == 0)
+		{ 
+			Element* novi = (Element*)malloc(sizeof(Element));
+			novi->broj = 0;
+			novi->next = tmp->next;
+			tmp->next = novi;
+			tmp = tmp->next->next;
+			
+		}
+		else
+		{
+			tmp = tmp->next;
+		}
+	}
+	if (lst->broj % 2 == 0)
+	{
+		Element* novi = (Element*)malloc(sizeof(Element));
+		novi->broj = 0;
+		novi->next = lst;
+		return novi;
+	}
+	return lst;
+}
+
+Element* izbrisi_zadnji_broj(Element* lst)
+{
+	if (!lst)
+	{
+		return lst;
+	}
+	Element* tmp = lst;
+	while (tmp->next->next != 0)
+	{
+		tmp = tmp->next;
+	}
+	Element* obrisi = tmp->next;
+	tmp->next = tmp->next->next;
+	free(obrisi);
+	return lst;
+}
+
+
+//Napisati funkciju koja prima listu i iz nje briše sve neparne brojeve.
+//Funkcija vraća izmijenjenu listu.
+
+Element* izbrisi_neparnog(Element* lst)
+{
+	if (!lst)
+	{
+		return lst;
+	}
+	Element* tmp = lst;
+	
+
+	while (tmp->next != NULL)
+	{
+		if (tmp->next->broj % 2 == 1)
+		{
+			Element* obrisi = tmp->next;
+			tmp->next = tmp->next->next;
+			free(obrisi);
+
+		}
+		else
+		{
+			tmp = tmp->next;
+		}
+	}
+	if (lst->broj % 2 == 1)
+	{
+		Element* obrisi = lst;
+		lst = lst->next;
+		print(lst);
+		free(obrisi);
+		print(lst);
+		return lst;
+	
+	}
+	return lst;
+}
+
+Element* izbrisi_prvih_B_brojeva(Element* lst, int B)
+{
+	Element*tmp = lst;
+	int count = 0;
+
+	while (tmp != NULL && count < B) {
+		Element* obrisi = tmp;
+		tmp = tmp->next;
+		free(obrisi);
+		count++;
+	}
+	print(lst); 
+	return lst;
+}
+
+//Napisati funkciju koja prima jednostruko vezanu listu(svaki element sadrži broj b) i broj B.
+//Funkcija briše prvih B elemenata liste(ili cijelu listu ako ima manje elemenata).
+//Funkcija vraća nastalu listu.
+
+Element* izbrisi_zadano(Element* lst, int B)
+{
+	Element* tmp = lst;
+	int brojac = 0;
+	while (tmp != NULL)
+	{
+		tmp = tmp->next;
+		brojac++;
+	}
+	if (B >= brojac)
+	{
+		Element* tmp1 = lst;
+		while (tmp1 != NULL)
+		{
+			Element* obrisi = tmp1;
+			tmp1 = tmp1->next;
+			free(obrisi);
+
+		}
+		return lst;
+	}
+	else
+	{
+		Element* tmp1 = lst;
+		while (B > 0)
+		{
+			Element* obrisi = tmp1;
+			tmp1 = tmp1->next;
+			free(obrisi);
+			B--;
+		}
+		print(tmp1);
+		return tmp1;
+	}
+	return lst;
+
+}
+
+/*Napisati funkciju koja prima jednostruko vezanu listu(svaki element sadrži broj).
+Funkcija će provjeriti da li je lista sortirana uzlazno*/
+
+
+int provjera_jel_ulazno(Element* lst)
+{
+	int brojac = 0;
+	if (!lst)
+	{
+		return 0;
+	}
+
+	while (lst->next != NULL)
+	{
+		if (lst->broj > lst->next->broj)
+		{
+			return 0;
+			printf(" b ");
+
+		}
+		lst = lst->next;
+		brojac++;
+		printf(" %d ", brojac);
+	}
+	printf(" c ");
+	return 1;
+}
+
+//
+//Napisati funkciju koja prima vezanu listu(svaki element sadrži broj) i jedan dodatni broj.
+//Funkcija će dodati novi element na predzadnje mjesto ako lista nije prazna,
+//ili na prvo mjesto ako je lista prazna.
+
+Element* dodaj_element(Element* lst, int broj)
+{
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj = broj;
+	novi->next = NULL;
+	if (!lst)
+	{
+		return novi;
+	}
+	if (lst->next == NULL)
+	{
+		novi->next = lst;
+		return novi;
+	}
+
+	Element* tmp = lst;
+	while (tmp->next->next != NULL)
+	{
+		tmp = tmp->next;
+	}
+	print(tmp->next);
+	novi->next = tmp->next;
+	tmp->next = novi;
+	return lst;
+}
+
+
+//Napisati funkciju koja prima jednostruko vezanu listu(svaki element sadrži broj b).
+//Funkcija vraća broj elemenata liste čiji su brojevi jednaki zadnjem broju u listi.
+int jednak(Element* lst)
+{
+	Element* tmp = lst;
+	while (tmp->next != NULL)
+	{
+		tmp = tmp->next;
+	}
+	print(tmp);
+
+	Element* tmp1 = lst;
+	int brojac = 0;
+	while (tmp1->next != NULL) //u ovom slucaju next da ne brojim zadnji clan kao da postoji
+	{
+		if (tmp1->broj == tmp->broj)
+		{
+			brojac++;
+		}
+		tmp1 = tmp1->next;
+	}
+	return brojac;
+
+}
+
+//
+//Napisati funkciju koja prima listu.Funkcija iz liste izdvaja u zasebnu listu sve elemente sa pozitivnim brojevima.
+//Funkcija vraća tu novu listu pozitivnih brojeva.Originalna lista mora i dalje biti ispravna vezana lista preostalih brojeva. 
+
+//void print(Element* lst) {
+//	Element* tmp = lst;
+//	while (tmp != NULL) {
+//		printf("%d-> ", tmp->broj);
+//		tmp = tmp->next;
+//	}
+//	printf(" null\n");
+//}
+
+Element* dodaj_u_novu(Element* lst)
+{
+	Element* tmp = lst;
+	int brojac = 0;
+	while (tmp != NULL) 
+	{
+		brojac++;
+		tmp = tmp->next;
+	}
+	int *niz= (int*)malloc(brojac * sizeof(int));
+	Element* tmp1 = lst;
+	brojac = 0;
+	while (tmp1 != NULL)
+	{
+		if (tmp1->broj % 2 == 0)
+		{
+			niz[brojac] = tmp1->broj;
+			tmp1 = tmp1->next;
+			brojac++;
+		}
+		else
+		{
+			tmp1 = tmp1->next;
+		}
+		
+	}
+	Element* novi = NULL;
+	for (int i = 0; i < brojac; i++)
+	{
+		novi = dodaj_u_glavu(niz[i], novi);
+		
+	}
+	return novi;
+	//return lst;
+}
+
+
+Element* dodaj_na_kraj(int broj, Element* lst) {
+	Element* novi = (Element*)malloc(sizeof(Element));
+	novi->broj = broj;
+	novi->next = NULL;
+	if (lst == NULL) {
+		return novi;
+	}
+	Element* tmp = lst;
+	while (tmp->next != NULL) {
+		tmp = tmp->next;
+	}
+	tmp->next = novi;
+	return lst;
+}
+
+
+//Element* samo_parni(Element* lst)
+//{
+//	Element* tmp = lst;
+//	while (tmp->next != NULL) // moramo da ne izgubimo poiner na prvi element vezane liste
+//	{
+//		if (tmp->next->broj % 2 == 1)
+//		{
+//			Element* obrisi = tmp->next;
+//			tmp->next = tmp->next->next;
+//			free(obrisi);
+//		}
+//		else
+//		{
+//			tmp = tmp->next;
+//		}
+//	}
+//	if (lst->broj % 2 == 1)
+//	{
+//		lst = lst->next;
+//		return lst;
+//	}
+//	return lst;
+//	
+//}
+
+//Napisati funkciju koja prima jednostruko vezanu listu(svaki element sadrži broj).
+//Funkcija će između svaka dva parna susjedna broja dodati novi element sa brojem 0. 
+
+//2 2 5 6 4 7 6 6 1 6 8
+//2 0 2 5 6 0 4 7 6 0 6 1 6 0 8
+
+Element* izmedu_parnih(Element* lst)
+{
+	Element* tmp = lst;
+
+	while (tmp->next != NULL)
+	{
+		if (tmp->broj % 2 == 0 && tmp->next->broj % 2 == 0)
+		{
+			Element* dodaj = (Element*)malloc(sizeof(Element));
+			dodaj->broj = 0;
+			dodaj->next = tmp->next;
+			tmp->next = dodaj;
+			tmp = tmp->next->next;
+		}
+		else
+		{
+			tmp = tmp->next;
+		}
+	}
+	return lst;
+
+}
+//Napisati funkciju koja prima vezanu listu(svaki element sadrži broj) i jedan dodatni broj.
+//Funkcija vraća pokazivač na zadnji element u listi koji je veći od dodatnog broja ili NULL ako se takav broj ne nalazi u listi.
+
+Element* dodatni_broj(Element* lst, int broj)
+{
+	
+	Element* tmp = lst;
+	Element* pokazivac = NULL;
+	if (!lst)
+	{
+		return lst;
+	}
+
+	while (tmp != NULL)
+	{
+		if (tmp->broj > broj)
+		{
+			pokazivac = tmp;
+		}
+		tmp = tmp->next;
+	}
+	return pokazivac;
+}
+//
+//Napisati funkciju koja prima vezanu listu sa barem tri elementa.
+//Funkcija će izbrisati zadnja tri elementa iz liste. (35 bodova)
+
+Element* zadnja_tri(Element* lst)
+{
+	Element* tmp = lst;
+	if (lst->next->next->next == NULL)
+	{
+		while (lst != NULL)
+		{
+
+			Element* obrisi = lst;
+			lst= lst->next;
+			free(obrisi);
+			
+		}
+		return lst;
+	}
+
+
+
+	while (tmp->next->next->next->next != NULL)
+	{
+		tmp = tmp->next;
+	}
+
+	while (tmp ->next != NULL)
+	{
+		
+		Element* obrisi = tmp->next;
+		tmp->next= tmp->next->next;
+		free(obrisi);
+		print(tmp);
+	}
+
+	
+	return lst;
+
+}
+//Napisati funkciju u koja prima jednostruko vezanu listu(svaki element sadrži broj).
+//Funkcija će provjeriti da li se ijedan broj u listi ponavlja.
+
+int jesu_li_isti(Element* lst)
+{
+	Element* tmp = lst;
+	
+	while (tmp  != NULL)
+	{
+		Element* tmp1 = tmp;
+		while(tmp1->next != NULL)
+		{
+			if (tmp1->next->broj == tmp->broj)
+			{
+				return 1; // ponavlja se
+			}
+			tmp1 = tmp1->next;
+		}
+		tmp = tmp->next;
+	}
+	return 0;
+
+}
+
+//
+//Napisati funkciju koja prima jednostruko vezanu listu(svaki element sadrži broj b).
+//Funkcija briše svaki drugi element liste.Funkcija vraća izmijenjenu listu. (25 bodova)
+
+
+Element* brisi_svako_drugi(Element* lst)
+{
+	Element* tmp = lst;
+	int brojac = 0;
+	while (tmp->next != NULL && tmp->next->next != NULL)
+	{
+		if (brojac % 2 == 0)
+		{
+			Element* obrisi = tmp->next;
+			tmp->next = tmp->next->next;
+			free(obrisi);
+			brojac++;
+		}
+		else
+		{
+			tmp = tmp->next;
+			brojac++;
+		}
+	}
+	return lst;
+}
+
+// *L1 -> z -> 1 -> 2 -> 3 -> 4 -> NULL
+// *L2 -> 1 -> 2 -> 3 -> z -> NULL
+//prebacivanje broja z s kraja l2 liste na pocetak l1 liste B kolokvij
+Element* prebaci123(Element* l1, Element* l2) {
+
+	while (l2->next->next != NULL)
+		l2 = l2->next;
+	Element* tmp = l2->next;
+	l2->next->next = l1;
+	return tmp;
+}
+
+Element* brisi_prva_tri(Element* lst)
+{
+	if (lst == NULL || lst->next == NULL || lst->next->next == NULL)
+	{
+		printf("greska");
+		return lst;
+	}
+	Element* obrisi = lst;
+	lst =lst->next;
+	free(obrisi);
+	obrisi = lst;
+	lst = lst->next;
+	free(obrisi);
+	obrisi = lst;
+	lst = lst->next;
+	free(obrisi);
+	return lst;
+}
+
+int main()
+{
+	Element* lst = NULL;
+	
+	lst = dodaj_u_glavu(1, lst);
+	lst = dodaj_u_glavu(10, lst);
+	lst = dodaj_u_glavu(9, lst);
+	lst = dodaj_u_glavu(8, lst);
+	lst = dodaj_u_glavu(7, lst);
+	lst = dodaj_u_glavu(6, lst);
+	lst = dodaj_u_glavu(5, lst);
+	lst = dodaj_u_glavu(4, lst);
+	lst = dodaj_u_glavu(3, lst);
+	lst = dodaj_u_glavu(2, lst);
+	lst = dodaj_u_glavu(1, lst);
+
+
+	Element* lst1 = NULL;
+	lst1 = dodaj_u_glavu(40, lst1);
+	lst1 = dodaj_u_glavu(30, lst1);
+	lst1 = dodaj_u_glavu(20, lst1);
+	lst1 = dodaj_u_glavu(100, lst1);
+	/*print(lst);
+	lst = prima(lst, 0, 5);
+	print(lst);*/
+	/*print(lst);
+	lst = vezano(lst, 9);
+	print(lst);*/
+	print(lst);
+	//print(lst1);
+	//lst = dodajN(lst, 100);
+	//print(lst);
+	//lst = dodajmeusredinu(lst, 99);
+	//int provjera_ulaznosti = provjera_jel_ulazno(lst);
+	//printf("\nMain\n");
+	//printf(" %d", provjera_ulaznosti);
+	lst = brisi_prva_tri(lst);
+	print(lst);
+	
+	return 0;
+}
